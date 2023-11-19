@@ -19,16 +19,17 @@ import Link from "next/link";
 import { api } from "@/utils/api";
 
 import Layout from "./layout";
+import { DemoNotifications } from "@/components/notifications";
 
 export default function Home() {
-
-/* const {isLoading, data} = await api. */
+  const { isLoading, data } = api.sequence.all.useQuery();
 
   return (
     <Layout>
       <div className="h-full px-4 py-6 lg:px-8">
         <Tabs defaultValue="music" className="h-full space-y-6">
-          <div className="space-between flex items-center">
+          <DemoNotifications />
+          {/* <div className="space-between flex items-center">
             <TabsList>
               <TabsTrigger value="music" className="relative">
                 Music
@@ -44,7 +45,7 @@ export default function Home() {
                 Add music
               </Button>
             </div>
-          </div>
+          </div>  */}
           <TabsContent value="music" className="border-none p-0 outline-none">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
