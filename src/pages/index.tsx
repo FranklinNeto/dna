@@ -1,6 +1,4 @@
 import { api } from "@/utils/api";
-import { useRouter } from "next/router";
-
 
 import Layout from "./layout";
 import { SkeletonDemo } from "@/components/skeleton-demo";
@@ -12,42 +10,32 @@ import seqparse from "seqparse";
 export default function Home() {
   const { isLoading, data } = api.sequence.all.useQuery();
 
-  const router = useRouter()
-
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
+  
+  const mutation = api.sequence.createSequence.useMutation();
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+
     const selectedFile = e.target.files?.[0];
-   
+
     if (selectedFile) {
       const fileReader = new FileReader();
       fileReader.onload = async () => {
-      const fileContent = fileReader.result as string;
-      console.log(fileContent);
-      const { name, type, seq, annotations } = await seqparse(fileContent);
+        const fileContent = fileReader.result as string;
+        console.log(fileContent);
 
+        const { name, type, seq, annotations } = await seqparse(fileContent);
 
-      const createdSequence = api.sequence.createSequence.useMutation({
-        name: name,
-        sequence: seq,
-      }); 
-
+        mutation.mutate({ name: name, sequence: seq });
       };
-      
-      
-      fileReader.readAsText(selectedFile);
-      
-   }
-    
-    
 
-      
-  } 
-  
+      fileReader.readAsText(selectedFile);
+    }
+  };
 
   return (
     <Layout>
@@ -70,13 +58,10 @@ export default function Home() {
           })
         ) : (
           <>
-          
-          <SkeletonDemo />
-          <SkeletonDemo />
-          <SkeletonDemo />
-        
+            <SkeletonDemo />
+            <SkeletonDemo />
+            <SkeletonDemo />
           </>
-    
         )}
       </div>
     </Layout>
