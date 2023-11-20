@@ -1,23 +1,79 @@
 import { api } from "@/utils/api";
+
+
 import Layout from "./layout";
 import { SkeletonDemo } from "@/components/skeleton-demo";
-import { CardSequence } from "@/components/notifications";
-
-
-
+import { CardSequence } from "@/components/card-sequences";
+import { Button } from "@/components/ui/button";
+import React, { useRef, ChangeEvent } from "react";
+import seqparse from "seqparse";
 
 export default function Home() {
   const { isLoading, data } = api.sequence.all.useQuery();
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+   
+    if (selectedFile) {
+      const fileReader = new FileReader();
+      fileReader.onload = async () => {
+      const fileContent = fileReader.result as string;
+      console.log(fileContent);
+      const { name, type, seq, annotations } = await seqparse(fileContent);
+
+
+      const createdSequence = api.sequence.createSequence.useMutation({
+        name: name,
+        sequence: seq,
+      }); 
+
+      };
+      
+      
+      fileReader.readAsText(selectedFile);
+      
+   }
+    
+    
+
+      
+  } 
+  
+
   return (
     <Layout>
-      <div className="h-full px-4 py-6 lg:px-8">
+      <div className="relative  h-20">
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
+        <Button className="absolute right-9 top-8 " onClick={handleButtonClick}>
+          Adicionar Sequência
+        </Button>
+      </div>
+
+      <div className=" h-full  px-4 py-4  lg:px-8 ">
         {!isLoading && Array.isArray(data) ? (
           data.map((sequence) => {
             return <CardSequence data={sequence} key={sequence.id} />;
           })
         ) : (
+          <>
+          
           <SkeletonDemo />
+          <SkeletonDemo />
+          <SkeletonDemo />
+        
+          </>
+    
         )}
       </div>
     </Layout>

@@ -8,7 +8,7 @@ import {
 
 import { Prisma } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 const sequenceWithUser = Prisma.validator<Prisma.SequenceDefaultArgs>()({
   include: { createdBy: true },
 });
@@ -18,23 +18,25 @@ interface CardSequenceProps {
   data: SequenceWithUser;
 }
 
-
-
 export function CardSequence({ data }: CardSequenceProps) {
+  const router = useRouter();
 
-  const router = useRouter()
-  
   return (
-    <Card>
+    <Card className="mb-4">
       <CardHeader className="pb-3">
         <CardTitle>{data.name}</CardTitle>
-        <CardDescription>
-          <p>{`${data.sequence.toUpperCase().substring(0, 110)} . . .`}</p>
+        <CardDescription className ="break-all max-w-[300px]">
+          <p>{`${data.sequence.toUpperCase()} . . .`}</p>
         </CardDescription>
         <CardTitle>Tamanho da sequência: {data.sequence.length} pb</CardTitle>
       </CardHeader>
       <CardContent className="grid gap-1">
-        <Button className="w-[100px]" onClick={()=> router.push(`/sequences/${data.id}`)}>Ver Detalhes</Button>
+        <Button
+          className="w-[100px]"
+          onClick={() => router.push(`/sequences/${data.id}`)}
+        >
+          Ver Detalhes
+        </Button>
       </CardContent>
     </Card>
   );
