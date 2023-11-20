@@ -1,20 +1,8 @@
-import { PlusCircledIcon } from "@radix-ui/react-icons"
 
-import { Button } from "@/components/ui/button"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-
-import { AlbumArtwork } from "@/components/album-artwork"
 import { Menu } from "@/components/menu"
-import { PodcastEmptyPlaceholder } from "@/components/podcast-empty-placeholder"
+
 import { Sidebar } from "@/components/sidebar"
-import { madeForYouAlbums } from "@/data/albums"
+
 
 import Head from "next/head";
 
