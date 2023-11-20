@@ -9,6 +9,10 @@ import {
 import { Prisma } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
+
+import React, { useRef, useEffect, useState } from 'react'
+
+
 const sequenceWithUser = Prisma.validator<Prisma.SequenceDefaultArgs>()({
   include: { createdBy: true },
 });
@@ -21,12 +25,43 @@ interface CardSequenceProps {
 export function CardSequence({ data }: CardSequenceProps) {
   const router = useRouter();
 
+  const divRef = useRef<HTMLDivElement>(null);
+  const [larguraDaDiv, setLarguraDaDiv] = useState<number>();
+
+  useEffect(() => {
+    const medirLargura = () => {
+      if (divRef.current) {
+        const larguraAtual: number = divRef.current.clientWidth;
+        setLarguraDaDiv(larguraAtual);
+      }
+    };
+    window.addEventListener('resize', medirLargura);
+    
+    medirLargura();
+
+    return () => {
+      window.removeEventListener('resize', medirLargura);
+    };
+  }, []);
+
+  
+  const maxCaracteres = () => {
+    
+    if(larguraDaDiv){
+      return larguraDaDiv/10
+    }
+  }
+  
+  
   return (
-    <Card className="mb-4">
+    <Card className="mb-4" ref={divRef}>
+
+    {larguraDaDiv !== null && (
+      <>
       <CardHeader className="pb-3">
         <CardTitle>{data.name}</CardTitle>
-        <CardDescription className ="break-all max-w-[300px]">
-          <p>{`${data.sequence.toUpperCase()} . . .`}</p>
+        <CardDescription >
+          <p>{`${data.sequence.toUpperCase().substring(0, maxCaracteres() )} . . .`}</p>
         </CardDescription>
         <CardTitle>Tamanho da sequência: {data.sequence.length} pb</CardTitle>
       </CardHeader>
@@ -38,6 +73,11 @@ export function CardSequence({ data }: CardSequenceProps) {
           Ver Detalhes
         </Button>
       </CardContent>
+      
+      
+      </>
+    )}
+   
     </Card>
   );
 }

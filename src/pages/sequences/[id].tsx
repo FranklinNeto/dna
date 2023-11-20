@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { api } from "@/utils/api";
 
-// @ts-expect-error nao possui versão tipada
+
 import { SeqViz } from "seqviz";
 
 import Layout from "../layout";

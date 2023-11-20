@@ -1,4 +1,5 @@
 import { api } from "@/utils/api";
+import { useRouter } from "next/router";
 
 
 import Layout from "./layout";
@@ -10,6 +11,8 @@ import seqparse from "seqparse";
 
 export default function Home() {
   const { isLoading, data } = api.sequence.all.useQuery();
+
+  const router = useRouter()
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
